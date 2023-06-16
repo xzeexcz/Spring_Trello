@@ -1,0 +1,72 @@
+<html xmlns:th = "http://thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{main.html}">
+<div layout:fragment="siteContent">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mt-2 mb-2 bg-secondary rounded-3 p-4">
+        <div class="form-control">
+          <label class="mt-1 mb-1 text-center text-white">CATEGORIES:</label>
+            <table class="table mt-3">
+                <form th:action="@{'/delete-categories-db'}" method="post">
+                <thead>
+                <tr>
+                    <th>ID:</th>
+                    <th>NAME:</th>
+                    <th>CHOICE:</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="zd:${vkladi}">
+                    <td th:text="${zd.getId()}"></td>
+                    <td th:text="${zd.getName()}"></td>
+                    <td><input type="checkbox" th:value="${zd.getId()}" name="cat_id"></td>
+                </tr>
+                </tbody>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Deleting</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you really?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Delete categories from database</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Delete categories
+                    </button>
+                </form>
+            </table>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCategory">
+                + Add new Category
+            </button>
+            <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="addCategoryLabel">Adding category</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:action="@{'/add-category-db'}" method="post" class="form-control">
+                                <label>NAME:</label>
+                                <input type="text" name="category_name" class="form-control" required>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Add new Category</button>
+                                </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</html>

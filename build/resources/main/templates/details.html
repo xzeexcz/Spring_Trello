@@ -1,0 +1,169 @@
+<html xmlns:th = "http://thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{main.html}">
+  <div layout:fragment="siteContent">
+      <div class="container">
+        <div class="row">
+          <div class="col-12 mt-2 mb-2 bg-secondary rounded-3 p-4">
+            <h4 class="h4 mb-2 mt-2 text-white" th:text="${papka.getName()}"></h4>
+            <div th:if="${papka.getCategoriesList().size() > 0}">
+            <form th:action="@{'/unassign-categories'}" method="post">
+              <div class="form-check" th:each="zs: ${papka.getCategoriesList()}">
+                <input type="hidden" th:value="${papka.getId()}" name="folder_id">
+                <input class="form-check-input" type="checkbox" th:value="${zs.getId()}"
+                       id="flexCheckDefault"
+                       checked
+                       name="cat_id">
+                <label class="form-check-label" for="flexCheckDefault"
+                       th:text="${zs.getName()}">
+                </label>
+              </div>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Delete selected categories
+              </button>
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Are you sure, my man?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-danger mt-2">Delete</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              </form>
+            </div>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#addCategory">
+                + Add category
+              </button>
+              <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="addCategoryLabel">Adding category</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form th:action="@{'assign-category'}" method="post">
+                        <div class="container">
+                          <div class="row">
+                            <input type="hidden" th:value="${papka.getId()}" name="folder_id">
+                            <table class="table mt-1">
+                              <thead>
+                              <tr>
+                                <th>ID:</th>
+                                <th>NAME:</th>
+                                <th>CHOOSE:</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr th:each="g : ${cati}">
+                                <td th:text="${g.getId()}"></td>
+                                <td th:text="${g.getName()}"></td>
+                                <td><input type="checkbox" name="cat1_id" th:value="${g.getId()}"></td>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-danger mt-2">Add category</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteFolder">
+                Delete this folder
+              </button>
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeFolder">
+                Change this folder
+              </button>
+              <div class="modal fade" id="deleteFolder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="deleteFolderLabel">Are you sure, my man?</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{'/delete-folder'}" method="post">
+                          <input type="hidden" th:value="${papka.getId()}" name="folder_id">
+                        <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-danger mt-2">Delete</button>
+                        </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal fade" id="changeFolder" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="changeFolderLabel">Changing folder</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form th:action="@{'/change-folder'}" method="post">
+                        <label>FOLDER NAME:</label>
+                        <input type="text" name="folder_rename" class="form-control mt-1" th:value="${papka.getName()}">
+                        <input type="hidden" th:value="${papka.getId()}" name="folder_id">
+                        <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary mt-2">CHANGE</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addTask">
+      + New task
+    </button>
+    <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="addTaskLabel">ADD TASK</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{'/add-task'}" method="post" class="form-control">
+              <input type="hidden" name="folder_id" th:value="${papka.getId()}">
+              <label>TITLE:</label>
+              <input type="text" name="task_name" class="form-control">
+              <label>DESCRIPTION:</label>
+              <textarea name="task_descr" rows="5" class="form-control"></textarea>
+            <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-success mt-2">ADD</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+      <table class="table mt-3" th:if="${zadanka.size() > 0}">
+        <thead>
+          <tr>
+            <th>ID:</th>
+            <th>Task Name:</th>
+            <th>Status:</th>
+            <th>Details:</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="zd : ${zadanka}">
+            <td th:text="${zd.getId()}"></td>
+            <td th:text="${zd.getTitle()}"></td>
+            <td>
+            <span th:text="${zd.getStatus() == 0 ? 'TO DO' : (zd.getStatus() == 1 ? 'IN TEST' : (zd.getStatus() == 2 ? 'DONE' : 'FAILED'))}"
+            th:classappend="${zd.getStatus() == 0 ? 'text-primary' : (zd.getStatus() == 1 ? 'text-warning' : (zd.getStatus() == 2 ? 'text-success' : 'text-danger'))}"></span>
+            </td>
+            <td><a th:href="@{'/details/tasks/' + ${zd.getId()}}" class="btn btn-info btn-sm">DETAILS</a></td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</html>

@@ -1,0 +1,94 @@
+<html xmlns:th = "http://thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{main.html}">
+<div layout:fragment="siteContent">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mt-2 mb-2 bg-secondary rounded-3 p-4">
+        <div class="form-control">
+          <label class="mt-1 mb-1">TITLE:</label>
+          <input readonly th:value="${zadanka.getTitle()}" class="form-control">
+          <label class="mt-1 mb-1">DESCRIPTION</label>
+          <textarea readonly th:text="${zadanka.getDescription()}" rows="10" class="form-control"></textarea>
+          <label class="mt-1 mb-1">STATUS:</label>
+            <span th:text="${zadanka.getStatus() == 0 ? 'TO DO' : (zadanka.getStatus() == 1 ? 'IN TEST' : (zadanka.getStatus() == 2 ? 'DONE' : 'FAILED'))}"
+                  th:classappend="${zadanka.getStatus() == 0 ? 'text-primary' : (zadanka.getStatus() == 1 ? 'text-warning' : (zadanka.getStatus() == 2 ? 'text-success' : 'text-danger'))}" class="form-control"></span>
+          <button type="button" class="btn btn-danger mt-1 mb-1" data-bs-toggle="modal" data-bs-target="#deleteTask">
+            Delete this task
+          </button>
+          <div class="col-2 mt-1" th:if="${zadanka.getStatus()<2}">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#changeTask">
+              Change this task
+            </button>
+          </div>
+          <div class="modal fade" id="deleteTask" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="deleteTaskLabel">Are you sure, my man?</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form th:action="@{'/delete-task'}" method="post">
+                    <input type="hidden" th:value="${zadanka.getId()}" name="task_id">
+                    <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger mt-2">Delete</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal fade" id="changeTask" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="changeTaskLabel">Changing Task</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form th:action="@{'/change-task'}" method="post">
+                    <input type="hidden" th:value="${zadanka.getId()}" name="task_id">
+                    <div class="form-control">
+                      <label class="mt-1 mb-1">TITLE:</label>
+                      <input th:value="${zadanka.getTitle()}" name="task_rename" class="form-control">
+                      <label class="mt-1 mb-1">DESCRIPTION</label>
+                      <textarea th:text="${zadanka.getDescription()}" name="task_redescr" rows="10" class="form-control"></textarea>
+                      <label class="mt-1 mb-1">STATUS:</label>
+                      <select class="form-control" name="task_restatus">
+                        <option th:selected="${zadanka.getStatus()==0}" th:value="0">TO DO</option>
+                        <option th:selected="${zadanka.getStatus()==1}" th:value="1">IN TEST</option>
+                        <option th:selected="${zadanka.getStatus()==2}" th:value="2">DONE</option>
+                        <option th:selected="${zadanka.getStatus()==3}" th:value="3">FAILED</option>
+                      </select>
+                    <button type="button" class="btn btn-secondary mt-2" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary mt-2">Change</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <div class="card shadow-0 border" style="background-color: #f0f2f5;">
+            <div class="card-body p-4">
+              <div class="form-outline mb-4">
+                <form th:action="@{'/add-comment'}" method="post">
+                  <input type="hidden" th:value="${zadanka.getId()}" name="task_id">
+                <input type="text" id="addANote" class="form-control" name="comment" placeholder="Type comment..." />
+                  <button type="submit" class="btn btn-sm btn-primary mt-1">Add comment</button>
+                </form>
+              </div>
+              <div class="card mb-4" th:each="h : ${comenti}">
+                <div class="card-body">
+                  <p th:text="${h.getComment()}"></p>
+                  </div>
+                </div>
+              </div>
+      </div>
+    </div>
+  </div>
+    </div>
+  </div>
+</div>
+</html>
